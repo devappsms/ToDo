@@ -1,9 +1,14 @@
 // Function to create a new todo item
 function createToDoItem() {
     let todoData = document.getElementById('input-box').value;
+    document.getElementById("input-box").value = "";
+    document.getElementById('addItemBtn').disabled = true;
+    document.getElementById('addItemBtn').style.background = "grey";
     createliElement('todo-container', todoData);
     saveToLocalStorage('todoItems', todoData);
 }
+
+
 
 // Function to create li element for todo item
 function createliElement(parentNode, data) {
@@ -11,11 +16,15 @@ function createliElement(parentNode, data) {
     let li = document.createElement("li");
     li.innerHTML = data;
     li.draggable = true;
-    let span = document.createElement("span");
-    span.innerHTML = "\u00d7";
-    span.onclick = removeItem; 
-    li.appendChild(span);
+    li.id = Date.now();
+    // let span = document.createElement("span");
+    // span.innerHTML = "\u00d7";
+    // span.onclick = removeItem;
+    // li.appendChild(span);
     listContainer.appendChild(li);
+    li.addEventListener("dragstart", dragStart);
+    li.addEventListener("dragend", dragEnd);
+    adjustContainerHeight(parentNode);
 }
 
 // Function to remove todo item
@@ -50,23 +59,27 @@ todos.forEach((todo) => {
     todo.addEventListener("dragend", dragEnd);
 });
 
-function dragStart(e) {
-    draggableTodo = this;
-    e.dataTransfer.setData("text/plain", ''); // Set data transfer properly
-    console.log("dragstart");
-}
-
-function dragEnd() {
-    draggableTodo = null;
-    console.log("dragEnd");
-}
-
 allContainers.forEach((container) => {
     container.addEventListener("dragover", dragOver);
     container.addEventListener("dragenter", dragEnter);
     container.addEventListener("dragleave", dragLeave);
     container.addEventListener("drop", dragDrop);
 });
+
+/* Drag and Drop Functions  Starts */
+function dragStart(e) {
+    draggableTodo = this;
+    console.log("dragstart");
+    e.dataTransfer.setData("text", e.target.innerText); // Set data transfer properly
+    e.dataTransfer.setData("elementId", e.target.id); // Set data transfer properly
+    console.log(e.dataTransfer)
+
+}
+
+function dragEnd() {
+    draggableTodo = null;
+    console.log("dragEnd");
+}
 
 function dragOver(e) {
     e.preventDefault(); // Prevent default behavior
@@ -82,7 +95,37 @@ function dragLeave() {
     console.log("dragLeave");
 }
 
-function dragDrop() {
-    this.appendChild(draggableTodo);
-    console.log("dragDrop");
+function dragDrop(e) {
+    e.preventDefault();
+    var data = e.dataTransfer.getData("text");
+    var elementId = e.dataTransfer.getData('elementId');
+    console.log("elementId", elementId)
+    console.log(e.target.id)
+    console.log(data)
+    var element = document.getElementById(elementId);
+    // If the event target is a different container
+    if (e.target !== element.parentElement) {
+        // Remove the node from its current parent
+        element.parentElement.removeChild(element);
+        // Append it to the new container
+        createliElement(e.target.id, data);
+    }
+}
+
+/* Drag and Drop Functions Ends */
+
+function adjustContainerHeight(id) {
+    var container = document.getElementById(id);
+    container.style.height = 'auto'; // Reset height to auto
+    var height = container.offsetHeight; // Get new height
+    container.style.height = height + 50 + 'px'; // Set height
+}
+
+function addItem() {
+    let data = document.getElementById("input-box").value;
+    console.log(data, data.length)
+    if (data.length > 5) {
+        document.getElementById('addItemBtn').disabled = false;
+        document.getElementById('addItemBtn').style.background = "magenta";
+    }
 }

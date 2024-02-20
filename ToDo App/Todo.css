@@ -6,7 +6,7 @@
     
 }
 body{
-    background-color: rgb(217, 64, 151);
+    background-color: #7FFFD4;
 }
 .todo-app{
     max-width: 400px;
@@ -22,7 +22,7 @@ h2{
     font-size:xx-large;
     padding-top: 5px;
     padding-bottom: 10px;
-    color: white;
+    color: black;
 }
 .row{
     display: flex;
@@ -52,7 +52,7 @@ button{
     border:none;
     outline:none;
     padding:19px 50px;
-    background: rgb(93, 7, 232);
+    background: grey;
     color: #fff;
     font-size: 16px;
     cursor: pointer;
@@ -119,6 +119,7 @@ ul li span:hover{
     background: #edeef0;
 }
 
-
-
-    
+.container {
+    min-height: 100px; /* Set a fixed height when no content */
+  height: auto; /* Let the height adjust based on content */
+}
