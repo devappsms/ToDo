@@ -129,3 +129,5 @@ function addItem() {
         document.getElementById('addItemBtn').style.background = "magenta";
     }
 }
+
+// Add your function below 
